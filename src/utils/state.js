@@ -6,23 +6,23 @@ export const State = (initialState, prefix) => {
 	const store = createContext(initialState);
 	const { Provider: InnerProvider } = store;
 
-	const updateState = (state, newState, path = '') => {
+	const updateState = (state, newState, path = '') => { /// actua como reducer
 		// console.log('updateState', state, path, newState) // debugging
 		if (path.length === 0) {
-			return { ...state, ...newState };
+			return { ...state, ...newState }; /// si no hay path agrega nueva propiedad al state y lo RETORNA
 		}
 		const pathArr = path.split('.');
-		const first = pathArr[0];
-		state = { ...state };
+		const first = pathArr[0]; ///propiedad a modificar
+		state = { ...state }; /// nueva copia del estado
 		if (!state[first]) {
-			state[first] = {};
+			state[first] = {}; ///define nueva propiedad y le asigna objeto vacio 
 		}
-		if (pathArr.length === 1) {
+		if (pathArr.length === 1) { /// si la propiedad no tiene una subpropiedad, rellena la propiedad
 			state[first] = !!newState && typeof newState === 'object' && !Array.isArray(newState) ? {
 				...state[first],
 				...newState
 			} : newState;
-		} else {
+		} else { ///rellena la propiedad con los datos viejos y repite el proceso de esta funcion con una propiedad interna
 			state[first] = {
 				...state[first],
 				...updateState(state[first], newState, pathArr.slice(1).join('.'))

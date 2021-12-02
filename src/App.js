@@ -6,7 +6,8 @@ import { Wallet } from './components/Wallet';
 import { Contract } from './components/Contract';
 import { Gallery } from './components/Gallery';
 
-import Avatar from 'url:./img/avatar.jpg';
+import Avatar from 'url:./img/Cookie.png';
+import Logo from 'url:./img/Logo.png';
 import NearLogo from 'url:./img/near_icon.svg';
 
 import './App.scss';
@@ -14,8 +15,9 @@ import './bootstrap.css';
 
 const App = () => {
 	const { state, dispatch, update } = useContext(appStore);
-
+	
 	const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
+	account && console.log(account)
 
 	const [profile, setProfile] = useState(false);
 
@@ -43,16 +45,18 @@ const App = () => {
 			</div>
 		}
 
-		<div className="background"></div>
-
-		<div id="menu">
-			<div>
-				<img style={{ opacity: signedIn ? 1 : 0.25 }} src={Avatar}
-					onClick={() => setProfile(!profile)}
-				/>
+		<div id="menu" className="d-flex">
+			<div className="flex-shrink-1">
+				<img src={Avatar}/>
+				<img src={Logo}/>
 			</div>
-			<div>
-				{!signedIn ? <Wallet {...{ wallet }} /> : account.accountId}
+			<div id="tabs">
+				<div onClick={() => update('app.tab', 1)} style={{ background: tab === 1 ? '#fed' : '' }}><span className="links text-bolder"> Market</span></div>
+				<div onClick={() => update('app.tab', 2)} style={{ background: tab === 2 ? '#fed' : '' }}><span className="links text-bolder"> My NFTs</span></div>
+				<div onClick={() => update('app.tab', 3)} style={{ background: tab === 3 ? '#fed' : '' }}><span className="links text-bolder"> Mint</span></div>
+			</div>
+			<div className="d-flex justify-content-end">
+				{!signedIn ? <Wallet {...{ wallet }} /> : <div onClick={() => setProfile(!profile)} style={{cursor:"pointer"}}>{account.accountId}</div>}
 			</div>
 			{
 				profile && signedIn && <div id="profile">
@@ -67,11 +71,7 @@ const App = () => {
 
 
 		{
-			signedIn && <div id="tabs">
-				<div onClick={() => update('app.tab', 1)} style={{ background: tab === 1 ? '#fed' : '' }}>Market</div>
-				<div onClick={() => update('app.tab', 2)} style={{ background: tab === 2 ? '#fed' : '' }}>My NFTs</div>
-				<div onClick={() => update('app.tab', 3)} style={{ background: tab === 3 ? '#fed' : '' }}>Mint</div>
-			</div>
+			
 		}
 
 		{ signedIn && tab === 3 &&

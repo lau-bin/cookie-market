@@ -8,6 +8,7 @@ import { getMarketStoragePaid, loadItems } from '../state/views';
 import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate } from '../state/actions';
 import { useHistory } from '../utils/history';
 import {Token} from './Token';
+import { PopUp } from './PopUp';
 
 
 const PATH_SPLIT = '?t=';
@@ -30,7 +31,7 @@ const sortFunctions = {
 
 export const Gallery = ({ app, views, update, contractAccount, account, loading, dispatch }) => {
 	if (!contractAccount) return null;
-
+	
 	const { tab, sort, filter } = app;
 	const { tokens, sales, allTokens, marketStoragePaid } = views
 
@@ -39,12 +40,16 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 	/// market
 	const [offerPrice, setOfferPrice] = useState('');
-	const [offerToken, setOfferToken] = useState('near');
+	//-const [offerToken, setOfferToken] = useState('near');
+	const offerToken='near';
 
 	/// updating user tokens
 	const [price, setPrice] = useState('');
 	const [ft, setFT] = useState('near');
 	const [saleConditions, setSaleConditions] = useState({});
+
+	//- pop-up
+	const [popUp, setPopUp] = useState({show:false,token:null});
 
 	useEffect(() => {
 		if (!loading) {
@@ -83,15 +88,16 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 	}
 
 	return <>
+		{ popUp.show && <PopUp setPopUp={setPopUp} popUp={popUp} formatNearAmount={formatNearAmount} accountId={accountId} account={account}/>}
 		{
 			tab < 3 && 
-			<center>
+			<center className="d-flex justify-content-center mt-3" >
 				{
-					tab !== 2 && <button onClick={() => update('app.filter', filter === 2 ? 1 : 2)} style={{background: '#fed'}}>{filter === 1 ? 'All' : 'Sales'}</button>
+					tab !== 2 && <button className="mx-3 px-3" onClick={() => update('app.filter', filter === 2 ? 1 : 2)} style={{background: '#fed'}}>{filter === 1 ? 'All' : 'Sales'}</button>
 				}
-				<button onClick={() => update('app.sort', sort === 2 ? 1 : 2)} style={{ background: sort === 1 || sort === 2 ? '#fed' : ''}}>Date {sort === 1 && '⬆️'}{sort === 2 && '⬇️'}</button>
+				<button className="mx-3" onClick={() => update('app.sort', sort === 2 ? 1 : 2)} style={{ background: sort === 1 || sort === 2 ? '#fed' : ''}}>Date {sort === 1 && '▲'}{sort === 2 && '▼'}</button>
 				{
-					tab !== 2 && <button onClick={() => update('app.sort', sort === 4 ? 3 : 4)} style={{ background: sort === 3 || sort === 4 ? '#fed' : ''}}>Price {sort === 3 && '⬆️'}{sort === 4 && '⬇️'}</button>
+					tab !== 2 && <button className="mx-3" onClick={() => update('app.sort', sort === 4 ? 3 : 4)} style={{ background: sort === 3 || sort === 4 ? '#fed' : ''}}>Price {sort === 3 && '▲'}{sort === 4 && '▼'}</button>
 				}
 			</center>
 		}
@@ -106,11 +112,28 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						bids = {},
 						royalty = {}
 					}) =>
-						<div className="col-6 col-md-3">
-							<div key={token_id} className="border border-dark p-2 m-2">
-								<img style={{width:"15vw",height:"15vw"}} src={media} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)} />
-								<p>{accountId !== owner_id ? `Owned by ${formatAccountId(owner_id)}` : `You own this!`}</p>
-								{ Object.keys(sale_conditions).length > 0 && <>
+						<div className="col-6 col-md-2">
+							<div key={token_id} className="d-flex flex-column p-2 m-2">
+								<img className="cookieToken" style={{width:"120px",height:"120px",display:"block",margin:"auto"}} src={media} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})} />
+								{
+									Object.keys(sale_conditions).length > 0 && <>
+										{
+											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="mt-3 mb-2" style={{display:"block",margin:"auto",fontSize:"12px"}} key={ft_token_id}>
+												<span className="text-white px-2 text-bolder" style={{background: "#D18436", borderRadius: "5px"}}>
+													{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]}
+												</span>
+											</div>)
+										}
+									</>	
+								}
+								<div className="d-flex justify-content-center">
+										<svg style={{minWidth:"20px"}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#D18436" className="bi bi-person-circle" viewBox="0 0 16 16">
+											<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+											<path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+										</svg>
+										<p className="text-center userToken mx-1" >{accountId !== owner_id ? `${formatAccountId(owner_id)}` : `You`}</p>
+								</div>
+								{ false && Object.keys(sale_conditions).length > 0 && <>
 									<h4>Royalties</h4>
 									{
 										Object.keys(royalty).length > 0 ?
@@ -123,18 +146,12 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 								</>
 								}
 								{
-									Object.keys(sale_conditions).length > 0 && <>
-										<h4>Sale Conditions</h4>
-										{
-											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="margin-bottom" key={ft_token_id}>
-												{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
-											</div>)
-										}
+									false && <>
 										{
 											accountId.length > 0 && accountId !== owner_id && <>
 												<input type="number" placeholder="Price" value={offerPrice} onChange={(e) => setOfferPrice(e.target.value)} />
 												{
-													getTokenOptions(offerToken, setOfferToken, Object.keys(sale_conditions))
+													//-getTokenOptions(offerToken, setOfferToken, Object.keys(sale_conditions))
 												}
 												<button onClick={() => handleOffer(account, token_id, offerToken, offerPrice)}>Offer</button>
 											</>
@@ -142,7 +159,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 									</>
 								}
 								{
-									Object.keys(bids).length > 0 && <>
+									false && Object.keys(bids).length > 0 && <>
 										<h4>Offers</h4>
 										{
 											Object.entries(bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
@@ -165,7 +182,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 		</div>
 		{
 			tab === 2 && <>
-				{!tokens.length && <p className="margin">No NFTs. Try minting something!</p>}
+				{!tokens.length && <p className="margin">You dont have any NFTs. Try minting something!</p>}
+					<div className="container-fluid">
+					<div className="row">
 				{
 					tokens.map(({
 						metadata: { media },
@@ -174,8 +193,10 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						sale_conditions = {},
 						bids = {},
 						royalty = {}
-					}) => <div key={token_id} className="item">
-						<img src={media} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)} />
+					}) => 
+					<div className="col-6 col-md-2">
+						<div key={token_id} className="d-flex flex-column p-2 m-2">
+						<img style={{width:"120px",height:"120px",display:"block",margin:"auto"}} src={media} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)} />
 						{
 							marketStoragePaid !== '0' ? <>
 								<h4>Royalties</h4>
@@ -215,7 +236,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 											<h4>Add Sale Conditions</h4>
 											<input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
 											{
-												getTokenOptions(ft, setFT)
+												//-getTokenOptions(ft, setFT) permite elegir entre near y otras monedas, desactivado para usar solo near
 											}
 											<button onClick={() => {
 												if (!price.length) {
@@ -255,8 +276,12 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 									<button onClick={() => handleRegisterStorage(account)}>Register with Market to Sell</button>
 								</div>
 						}
-					</div>)
+					</div>
+					</div>
+					)
 				}
+					</div>
+					</div>
 			</>
 		}
 

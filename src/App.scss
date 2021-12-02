@@ -2,6 +2,11 @@
 $halfw: 400px;
 $margin-fix: -16px;
 
+@font-face {
+    font-family: 'Fruktur';
+    src: url('./fonts/Fruktur-Regular.ttf');
+}
+
 ::-webkit-scrollbar {
     width: 0;
 }
@@ -20,6 +25,7 @@ body {
     height: auto;
     overflow-y: scroll;
     font-family: 'Inter', sans-serif !important;
+    background: #F8EDE7
 }
 
 #root {
@@ -28,9 +34,9 @@ body {
     width: 100%;
     height: 100vh;
     padding: 16px 0;
-    background: white;
+    background: #F8EDE7;
     > div {
-        background: white;
+        background: #F8EDE7;
     }
     &:before {
         z-index: -1;
@@ -180,7 +186,7 @@ animation-name: pulse;
 
 #menu {
     position: relative;
-    background: white;
+    background: #F8EDE7;
     height: 80px;
     width: 100vw;
     margin-top: -16px;
@@ -192,6 +198,7 @@ animation-name: pulse;
     > div {
         padding: 16px;
         width: 50%;
+        background: #F8EDE7;
     }
     > div:nth-child(1) {
         text-align: left;
@@ -200,7 +207,7 @@ animation-name: pulse;
         text-align: right;
     }
     img {
-        width: 48px;
+        width: 70px;
         cursor: pointer;
         outline: none !important;
     }
@@ -230,15 +237,7 @@ animation-name: pulse;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 48px;
-    width: 100vw;
-    margin-bottom: 24px;
     cursor: pointer;
-    border-bottom: 2px solid #ddd;
-    box-shadow: 0 0 16px #ddd;
-    > div:not(:last-child) {
-        border-right: 2px solid #ddd;
-    }
     > div {
         height: 100%;
         width: 100%;
@@ -246,7 +245,24 @@ animation-name: pulse;
         text-align: center;
     }
 }
+span.links{
+    position: static;
+width: 42px;
+height: 14px;
+left: 0px;
+top: 0px;
 
+font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+font-style: normal;
+font-weight: bold;
+font-size: 12px;
+line-height: 14px;
+/* identical to box height */
+
+letter-spacing: 0.05em;
+
+color: #915731;
+}
 #gallery {
     width: 100vw;
     
@@ -327,11 +343,18 @@ h4 {
 }
 
 button, input, select {
-    border: 2px solid #0072CE;
-    padding: 12px;
-    font-family: 'Inter', sans-serif !important;
+    border: 2px solid #D18436;
+    color:#D18436;
+    background-color: #F8EDE7 !important;
+    box-sizing: border-box;
+    font-weight: bold;
+    font-size: 12px !important;
+    border-radius: 40px !important;
+    padding: 0px 15px;
     cursor: pointer;
     outline: none !important;
+    min-width: 150px;
+    margin-bottom:16px !important;
 }
 
 button, select {
@@ -354,8 +377,220 @@ input {
     width: 50%;
 }
 
+#btnConnectWallet{
+color:white !important;
+background: #915731 !important;
+border: 3px solid #D18436 !important;
+box-sizing: border-box !important;
+border-radius: 8px !important;
+}
+
+.cookieToken{
+    border: 4px solid #D18436;
+    box-sizing: border-box;
+    border-radius: 8px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.backgroundPopUp{
+    display: flex;
+    position: fixed;
+    background:  rgba(25, 25, 26, 0.75);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0; 
+}
+
+.popUp{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 60px 0px 0px;
+
+    position: relative;
+    margin: auto;
+    width: 700px;
+    height: 350px;
+
+    background: #F8EDE7;
+    box-shadow: 0px 4px 12px rgba(209, 132, 54, 0.35);
+    border-radius: 8px;
+}
+
+.popUp img{
+    /* Image */
 
 
+position: static;
+height: 350px;
+width: 350px;
+left: 0%;
+right: 50%;
+top: calc(50% - 350px/2);
+
+border-radius: 8px 0px 0px 8px;
+
+/* Inside Auto Layout */
+
+flex: none;
+order: 0;
+flex-grow: 0;
+margin-right: 50px;
+}
+
+.popUp img .cookieInfo{
+    /* Auto Layout */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 80px 0px;
+
+    position: static;
+    width: 240px;
+    height: 350px;
+    left: 400px;
+    top: 0px;
+
+
+    /* Inside Auto Layout */
+
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 1;
+    margin: 0px 50px;
+}
+
+.popUp img .cookieInfo .frame1{
+   /* Auto Layout */
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    position: static;
+    width: 240px;
+    height: 59px;
+    left: 0px;
+    top: 80px;
+
+
+    /* Inside Auto Layout */
+
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 25px 0px;
+}
+
+.popUp img .cookieInfo .frame1 .frameMetaInfoe1{
+    /* Auto Layout */
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+
+    position: static;
+    width: 149px;
+    height: 19px;
+    left: 0px;
+    top: 0px;
+
+
+    /* Inside Auto Layout */
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 5px 0px;
+}
+
+.popUp img .cookieInfo .frame1 .frameMetaInfoe1 .cost{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1px 10px 0px;
+
+    position: static;
+    width: 62px;
+    height: 19px;
+    left: 0px;
+    top: 0px;
+
+    background: #D18436;
+    border-radius: 5px;
+
+    /* Inside Auto Layout */
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 0px 20px;
+}
+
+.popUp img .cookieInfo .frame1 .frameMetaInfoe1 .owner{
+   /* Auto Layout */
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+
+    position: static;
+    width: 67px;
+    height: 15px;
+    left: 82px;
+    top: 2px;
+
+
+    /* Inside Auto Layout */
+
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 0px 20px; 
+}
+
+.owner span{
+    color: #D18436;
+}
+
+span.cost{
+    color:white;
+    font-size: 12px;
+    background: #D18436;
+    border-radius: 5px;
+    padding: 2px 6px;
+}
+
+.userToken{
+    font-family: "Fruktur";
+    color:#D18436;
+    font-size: 12px;
+}
+
+#cookieSpinner{
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-duration: .8s;
+    animation-name: spinner-loading
+ }
+
+@keyframes spinner-loading{
+  0% {
+      transform: rotate(0deg)
+  } to {
+      transform: rotate(1turn)
+  }
+}
 
 @media (min-width: 768px) {
     .token > div {

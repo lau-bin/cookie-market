@@ -12,8 +12,6 @@ export const Token = ({
 	dispatch, account, token, token: { token_id, nft_contract_id, metadata, owner_id, conditions, bids }
 }) => {
 
-	console.log(token);
-
 	const [offerPrice, setOfferPrice] = useState('');
 	const [offerToken, setOfferToken] = useState('near');
 
@@ -55,7 +53,7 @@ export const Token = ({
 
 	const { accountId } = account || {};
 
-	return <div className="token">
+	return <div className="token popUp">
 		<div onClick={() => history.pushState({}, '', window.location.pathname)}>
 
 			<h3>Click to Close</h3>

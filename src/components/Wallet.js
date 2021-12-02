@@ -32,7 +32,7 @@ export const Wallet = ({ wallet, account, update, dispatch, handleClose }) => {
 	}
 
 	return <>
-		<button onClick={() => wallet.signIn()}>Connect Wallet</button>
+		<button onClick={() => wallet.signIn()} id="btnConnectWallet" className="p-1">CONNECT WALLET</button>
 	</>;
 };
 
