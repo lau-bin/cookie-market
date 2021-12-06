@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import * as nearAPI from 'near-api-js';
 import { parseNearAmount, token2symbol, getTokenOptions, handleOffer } from '../state/near';
-import {
-	formatAccountId,
-} from '../utils/near-utils';
+import { formatAccountId } from '../utils/near-utils';
 import { getMarketStoragePaid, loadItems } from '../state/views';
-import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate } from '../state/actions';
+import { handleAcceptOffer, handleRegisterStorage, handleSaleRemove, handleSaleUpdate } from '../state/actions';
 import { useHistory } from '../utils/history';
 import {Token} from './Token';
 import { PopUp } from './PopUp';
+import { InputMyNFT } from './InputMyNFT';
 
 
 const PATH_SPLIT = '?t=';
@@ -66,7 +65,6 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 	let tokenId;
 	let pathSplit = path.split(PATH_SPLIT)[1];
 	if (allTokens.length && pathSplit?.length) {
-		console.log(pathSplit);
 		tokenId = pathSplit.split(SUB_SPLIT)[0];
 	}
 
@@ -75,9 +73,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 
 	let market = sales;
-	if (tab !== 2 && filter === 1) {
-		market = market.concat(allTokens.filter(({ token_id }) => !market.some(({ token_id: t}) => t === token_id)));
-	}
+	//-if (tab !== 2 && filter === 1) {
+	//-	market = market.concat(allTokens.filter(({ token_id }) => !market.some(({ token_id: t}) => t === token_id)));
+	//-} no queremos nft que no esten a la venta en el market
 	market.sort(sortFunctions[sort]);
 	tokens.sort(sortFunctions[sort]);
 
@@ -93,16 +91,15 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 			tab < 3 && 
 			<center className="d-flex justify-content-center mt-3" >
 				{
-					tab !== 2 && <button className="mx-3 px-3" onClick={() => update('app.filter', filter === 2 ? 1 : 2)} style={{background: '#fed'}}>{filter === 1 ? 'All' : 'Sales'}</button>
+					false && tab !== 2 && <button className="mx-3 btnSort px-3" onClick={() => update('app.filter', filter === 2 ? 1 : 2)} style={{background: '#fed'}}>{filter === 1 ? 'All' : 'Sales'}</button>
 				}
-				<button className="mx-3" onClick={() => update('app.sort', sort === 2 ? 1 : 2)} style={{ background: sort === 1 || sort === 2 ? '#fed' : ''}}>Date {sort === 1 && '▲'}{sort === 2 && '▼'}</button>
+				<button className="mx-3 btnSort" onClick={() => update('app.sort', sort === 2 ? 1 : 2)} style={{ background: sort === 1 || sort === 2 ? '#fed' : ''}}>Date {sort === 1 && '▲'}{sort === 2 && '▼'}</button>
 				{
-					tab !== 2 && <button className="mx-3" onClick={() => update('app.sort', sort === 4 ? 3 : 4)} style={{ background: sort === 3 || sort === 4 ? '#fed' : ''}}>Price {sort === 3 && '▲'}{sort === 4 && '▼'}</button>
+					tab !== 2 && <button className="mx-3 btnSort" onClick={() => update('app.sort', sort === 4 ? 3 : 4)} style={{ background: sort === 3 || sort === 4 ? '#fed' : ''}}>Price {sort === 3 && '▲'}{sort === 4 && '▼'}</button>
 				}
 			</center>
 		}
-		<div className="container-fluid">
-			<div className="row">
+			<div className="containerGrid">
 				{
 					tab === 1 && market.map(({
 						metadata: { media },
@@ -112,9 +109,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						bids = {},
 						royalty = {}
 					}) =>
-						<div className="col-6 col-md-2">
+						<>
 							<div key={token_id} className="d-flex flex-column p-2 m-2">
-								<img className="cookieToken" style={{width:"120px",height:"120px",display:"block",margin:"auto"}} src={media} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})} />
+								<img className="cookieToken" src={media} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})} />
 								{
 									Object.keys(sale_conditions).length > 0 && <>
 										{
@@ -131,7 +128,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 											<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
 											<path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
 										</svg>
-										<p className="text-center userToken mx-1" >{accountId !== owner_id ? `${formatAccountId(owner_id)}` : `You`}</p>
+										<p className="text-center userToken mx-1" >{accountId !== owner_id ? `${formatAccountId(owner_id)}` : `Your NFT`}</p>
 								</div>
 								{ false && Object.keys(sale_conditions).length > 0 && <>
 									<h4>Royalties</h4>
@@ -167,7 +164,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 													{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]} by {bid_owner_id}
 												</div>
 												{
-													accountId === owner_id &&
+													accountId === owner_id && 
 													<button onClick={() => handleAcceptOffer(account, token_id, ft_token_id)}>Accept</button>
 												}
 											</div>) )
@@ -175,16 +172,14 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 									</>
 								}
 							</div>
-						</div>
+						</>
 					)
 				}
 			</div>
-		</div>
 		{
 			tab === 2 && <>
 				{!tokens.length && <p className="margin">You dont have any NFTs. Try minting something!</p>}
-					<div className="container-fluid">
-					<div className="row">
+					<div className="containerGrid">
 				{
 					tokens.map(({
 						metadata: { media },
@@ -194,26 +189,27 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						bids = {},
 						royalty = {}
 					}) => 
-					<div className="col-6 col-md-2">
+					<div>
 						<div key={token_id} className="d-flex flex-column p-2 m-2">
-						<img style={{width:"120px",height:"120px",display:"block",margin:"auto"}} src={media} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)} />
+						<img className="cookieToken" src={media} />
 						{
 							marketStoragePaid !== '0' ? <>
-								<h4>Royalties</h4>
+								{	false && <h4>Royalties</h4> }
 								{
-									Object.keys(royalty).length > 0 ?
+									false && (Object.keys(royalty).length > 0 ?
 										Object.entries(royalty).map(([receiver, amount]) => <div key={receiver}>
 											{receiver} - {amount / 100}%
 										</div>)
 										:
-										<p>This token has no royalties.</p>
+										<p>This token has no royalties.</p>)
 								}
 								{
 									Object.keys(sale_conditions).length > 0 && <>
-										<h4>Current Sale Conditions</h4>
 										{
-											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="margin-bottom" key={ft_token_id}>
-												{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
+											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="textCenter my-2" key={ft_token_id}>
+												<h4 className="textCenter">
+													{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]} In Market
+												</h4>
 											</div>)
 										}
 									</>
@@ -231,45 +227,42 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 									// 	</div>
 								}
 								{
-									accountId === owner_id && <>
-										<div>
-											<h4>Add Sale Conditions</h4>
-											<input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
-											{
-												//-getTokenOptions(ft, setFT) permite elegir entre near y otras monedas, desactivado para usar solo near
-											}
-											<button onClick={() => {
-												if (!price.length) {
-													return alert('Enter a price');
-												}
-												const newSaleConditions = {
-													...saleConditions,
-													[ft]: parseNearAmount(price)
-												}
-												setSaleConditions(newSaleConditions);
-												setPrice('');
-												setFT('near');
-												handleSaleUpdate(account, token_id, newSaleConditions);
-											}}>Add</button>
-										</div>
-										<div>
-											<i style={{ fontSize: '0.75rem' }}>Note: price 0 means open offers</i>
-										</div>
-									</>
+									accountId === owner_id && sale_conditions.near && <>
+									<div>
+										<InputMyNFT account={account} token_id={token_id} text="Update Price..."/>
+									</div>
+									<button onClick={() => { handleSaleRemove(account, token_id)}}>Remove From Market</button>
+								</>
 								}
 								{
-									Object.keys(bids).length > 0 && <>
-										<h4>Offers</h4>
-										{
-											Object.entries(bids).map(([ft_token_id, { owner_id, price }]) => <div className="offers" key={ft_token_id}>
-												<div>
-													{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
-												</div>
-												<button onClick={() => handleAcceptOffer(token_id, ft_token_id)}>Accept</button>
-											</div>)
-										}
+									accountId === owner_id && !sale_conditions.near && <>
+										<div>
+											<h4 className="textCenter mt-2 mb-3">Add To Sale</h4>
+
+											<InputMyNFT account={account} token_id={token_id} text="Add Price..."/>
+										</div>
+										<div className="textCenter">
+											<span style={{ fontSize: '0.75rem' }}>Price 0 means open offers</span>
+										</div>
 									</>
 								}
+								{Object.keys(bids).length > 0 && 
+								<>
+									{
+											Object.entries(bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.filter(element=>element===ft_token_bids[ft_token_bids.length-1]).map(({ owner_id: bid_owner_id, price }) => 
+											<div className="offers" key={ft_token_id}>
+											<div>
+											<h4>Offer by {formatAccountId(bid_owner_id,17)}</h4>
+												
+											</div>
+											{
+												accountId === owner_id &&
+												<button className="w-100" onClick={() => handleAcceptOffer(account, token_id, ft_token_id)}>Accept {formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</button>
+											}
+										</div>) )
+									}
+								</>
+							}
 							</>
 								:
 								<div className="center">
@@ -280,7 +273,6 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					</div>
 					)
 				}
-					</div>
 					</div>
 			</>
 		}

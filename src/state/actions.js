@@ -66,3 +66,18 @@ export const handleSaleUpdate = async (account, token_id, newSaleConditions) => 
         }, GAS, parseNearAmount('0.01'));
     }
 };
+
+export const handleSaleRemove = async (account, token_id) => {
+    await account.functionCall(marketId, 'remove_sale', {
+        nft_contract_id: contractId,
+        token_id
+    }, GAS,parseNearAmount('0.000000000000000000000001') );
+};
+
+export const handleBidRemove = async (account, token_id) => {
+    /*await account.functionCall(marketId, 'remove_bid', {
+        nft_contract_id: contractId,
+        token_id
+    }, GAS,parseNearAmount('0.01') );*/
+    console.log("removiendo token: "+token_id );
+};

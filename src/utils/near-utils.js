@@ -35,7 +35,7 @@ export const setSignerFromSeed = async (accountId, seedPhrase) => {
 	const keyPair = KeyPair.fromString(secretKey);
 	near.connection.signer.keyStore.setKey(networkId, accountId, keyPair);
 };
-export function formatAccountId (accountId, len = 48) {
+export function formatAccountId (accountId, len = 15) {
 	if (accountId.length > len) {
 		return accountId.substr(0, len - 3) + '...';
 	}
