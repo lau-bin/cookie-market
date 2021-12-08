@@ -37,9 +37,9 @@ impl Contract {
     #[payable]
     pub fn remove_sale(&mut self, nft_contract_id: ValidAccountId, token_id: String) {
         assert_one_yocto();
+        assert_eq!(owner_id, sale.owner_id, "Must be sale owner");
         let sale = self.internal_remove_sale(nft_contract_id.into(), token_id);
         let owner_id = env::predecessor_account_id();
-        assert_eq!(owner_id, sale.owner_id, "Must be sale owner");
         self.refund_all_bids(&sale.bids);
     }
 
@@ -162,6 +162,8 @@ impl Contract {
         let contract_and_token_id = format!("{}{}{}", contract_id.clone(), DELIMETER, token_id.clone());
         // remove bid before proceeding to process purchase
         let mut sale = self.sales.get(&contract_and_token_id).expect("No sale");
+        // only allow owner of the token to accept an offer
+        assert_eq!(env::predecessor_account_id, sale.owner_id);
         let bids_for_token_id = sale.bids.remove(ft_token_id.as_ref()).expect("No bids");
         let bid = &bids_for_token_id[bids_for_token_id.len()-1];
         self.sales.insert(&contract_and_token_id, &sale);
