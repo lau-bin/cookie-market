@@ -79,5 +79,5 @@ export const handleBidRemove = async (account, token_id) => {
         nft_contract_id: contractId,
         token_id
     }, GAS,parseNearAmount('0.01') );*/
-    console.log("removiendo token: "+token_id );
+    console.log("removiendo oferta, token: "+token_id );
 };

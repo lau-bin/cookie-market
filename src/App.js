@@ -81,7 +81,7 @@ const App = () => {
 		{ signedIn && tab === 3 &&
 			<div id="contract">
 				{
-					signedIn && <MyOffers views={views} account={account}/>
+					<MyOffers views={views} account={account}/>
 					//<Contract {...{ near, update, wallet, account }} />
 				}
 			</div>

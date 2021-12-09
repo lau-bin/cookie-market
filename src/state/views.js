@@ -20,8 +20,10 @@ export const getMarketStoragePaid = (account) => async ({ update, getState }) =>
     })
 }
 
-export const loadItems = (account) => async ({ update, getState }) => {
+export const loadItems = (account,stateTokens,stateSales) => async ({ update, getState }) => {
 
+    const indexTokens= stateTokens.length.toString();
+    const indexSales= stateSales.length.toString();
     const { contractAccount } = getState()
 	
     /// user tokens
@@ -30,12 +32,12 @@ export const loadItems = (account) => async ({ update, getState }) => {
         const { accountId } = account
         tokens = await contractAccount.viewFunction(contractId, 'nft_tokens_for_owner', {
             account_id: account.accountId,
-            from_index: '0',
+            from_index: indexTokens,
             limit: 50
         });
         const sales = await contractAccount.viewFunction(marketId, 'get_sales_by_owner_id', {
             account_id: account.accountId,
-            from_index: '0',
+            from_index: indexTokens,
             limit: 50
         });
         // merge tokens with sale data if it's on sale
@@ -61,7 +63,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
                 nft_contract_id: contractId,
             },
             batch: {
-                from_index: '0', // must be name of contract arg (above)
+                from_index: indexSales, // must be name of contract arg (above)
                 limit: '1000', // must be name of contract arg (above)
                 step: 50, // divides contract arg 'limit'
                 flatten: [], // how to combine results
@@ -74,11 +76,10 @@ export const loadItems = (account) => async ({ update, getState }) => {
     } else {
         sales = await contractAccount.viewFunction(marketId, 'get_sales_by_nft_contract_id', {
             nft_contract_id: contractId,
-            from_index: '0',
+            from_index: indexSales,
             limit: 50
         });
     }
-    
     const saleTokens = await contractAccount.viewFunction(contractId, 'nft_tokens_batch', {
         token_ids: sales.filter(({ nft_contract_id }) => nft_contract_id === contractId).map(({ token_id }) => token_id)
     });
@@ -96,6 +97,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
 
     // all tokens
     // need to use NFT helper for deployed
+    /*
     let allTokens = [];
     if (process.env.REACT_APP_API_HELPER === "true") {
         const nft_total_supply = await contractAccount.viewFunction(contractId, 'nft_total_supply');
@@ -122,7 +124,10 @@ export const loadItems = (account) => async ({ update, getState }) => {
     }
 
     allTokens = allTokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
-
-    update('views', { tokens, sales, allTokens })
-    return { tokens, sales, allTokens }
+    */
+    
+    tokens.length === 0 ? update('tokensLoading.tokens',false) : update('views.tokens', [...tokens , ...stateTokens]);
+    sales.length === 0 ? update('tokensLoading.sales',false) : update('views.sales', [...sales , ...stateSales]);
+    tokens.length === 0 && sales.length === 0 && update('loading',false);
+    return { tokens, sales }
 };

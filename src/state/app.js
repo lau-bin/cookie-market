@@ -17,6 +17,11 @@ const initialState = {
 		tokens: [],
 		sales: [],
 		allTokens: [],
+	},
+	loading:true,
+	tokensLoading:{
+		tokens: true,
+		sales: true
 	}
 };
 let snackTimeout;

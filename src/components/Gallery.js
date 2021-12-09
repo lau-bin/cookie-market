@@ -8,6 +8,7 @@ import { useHistory } from '../utils/history';
 import {Token} from './Token';
 import { PopUp } from './PopUp';
 import { InputMyNFT } from './InputMyNFT';
+import { UserIconName } from './UserIconName';
 
 
 const PATH_SPLIT = '?t=';
@@ -51,11 +52,14 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 	const [popUp, setPopUp] = useState({show:false,token:null});
 
 	useEffect(() => {
-		if (!loading) {
-			dispatch(loadItems(account))
-			dispatch(getMarketStoragePaid(account))
+		dispatch(getMarketStoragePaid(account));
+	}, [])
+
+	useEffect(() => {
+		if (loading) {
+			dispatch(loadItems(account,tokens,sales))
 		}
-	}, [loading]);
+	}, [loading,sales,tokens]);
 
 	// path to token
 	const [path, setPath] = useState(window.location.href);
@@ -89,7 +93,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 		{ popUp.show && <PopUp setPopUp={setPopUp} popUp={popUp} formatNearAmount={formatNearAmount} accountId={accountId} account={account}/>}
 		{
 			tab < 3 && 
-			<center className="d-flex justify-content-center mt-3" >
+			<center className="containerflex justifyContentCenter mt-3 mb-2" >
 				{
 					false && tab !== 2 && <button className="mx-3 btnSort px-3" onClick={() => update('app.filter', filter === 2 ? 1 : 2)} style={{background: '#fed'}}>{filter === 1 ? 'All' : 'Sales'}</button>
 				}
@@ -110,26 +114,20 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						royalty = {}
 					}) =>
 						<>
-							<div key={token_id} className="d-flex flex-column p-2 m-2">
-								<img className="cookieToken" src={media} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})} />
+							<div key={token_id} className="containerFlex flexColumn p-2 m-2" style={{borderRadius:"8px",boxShadow:"0px 0px 12px #C8ADA766"}}>
+								<img className="cookieToken mt-3" src={media} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})} />
 								{
 									Object.keys(sale_conditions).length > 0 && <>
 										{
 											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="mt-3 mb-2" style={{display:"block",margin:"auto",fontSize:"12px"}} key={ft_token_id}>
-												<span className="text-white px-2 text-bolder" style={{background: "#D18436", borderRadius: "5px"}}>
+												<span className="textWhite textBolder" style={{background: "#D18436", borderRadius: "5px", padding:"2px 10px"}}>
 													{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]}
 												</span>
 											</div>)
 										}
 									</>	
 								}
-								<div className="d-flex justify-content-center">
-										<svg style={{minWidth:"20px"}} xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#D18436" className="bi bi-person-circle" viewBox="0 0 16 16">
-											<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-											<path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-										</svg>
-										<p className="text-center userToken mx-1" >{accountId !== owner_id ? `${formatAccountId(owner_id)}` : `Your NFT`}</p>
-								</div>
+								<UserIconName accountId={accountId} owner_id={owner_id}/>
 								{ false && Object.keys(sale_conditions).length > 0 && <>
 									<h4>Royalties</h4>
 									{
@@ -190,8 +188,8 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						royalty = {}
 					}) => 
 					<div>
-						<div key={token_id} className="d-flex flex-column p-2 m-2">
-						<img className="cookieToken" src={media} />
+						<div key={token_id} className="containerFlex flexColumn p-2 m-2" style={{borderRadius:"8px",boxShadow:"0px 0px 12px #C8ADA766"}}>
+						<img className="cookieToken mt-3" src={media} />
 						{
 							marketStoragePaid !== '0' ? <>
 								{	false && <h4>Royalties</h4> }

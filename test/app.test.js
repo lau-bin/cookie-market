@@ -63,7 +63,7 @@ describe('deploy contract ' + contractName, () => {
 	/// most of the following code in beforeAll can be used for deploying and initializing contracts
 	/// skip tests if you want to deploy to production or testnet without any NFTs
 	beforeAll(async () => {
-		await initContract();
+		// await initContract();
 
 		/// some users
 		aliceId = 'alice-' + now + '.' + contractId;
