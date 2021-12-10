@@ -3,7 +3,7 @@ import { handleSaleUpdate } from '../state/actions';
 import { parseNearAmount } from '../state/near';
 import { BuyPopUp } from './BuyPopUp';
 
-export const InputMyNFT = ({account,token_id,text}) => {
+export const InputMyNFT = ({account,token_id,text,setLoading}) => {
     
     const [price, setPrice] = useState('');
     const [saleConditions, setSaleConditions] = useState({});
@@ -27,6 +27,7 @@ export const InputMyNFT = ({account,token_id,text}) => {
                         setSaleConditions(newSaleConditions);
                         setPrice('');
                         setFT('near');
+                        setLoading(true);
                         handleSaleUpdate(account, token_id, newSaleConditions);
                     }
                 }}>Add</button>

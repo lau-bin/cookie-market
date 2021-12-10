@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import * as nearAPI from 'near-api-js';
 import { parseNearAmount, token2symbol, getTokenOptions, handleOffer } from '../state/near';
 import { formatAccountId } from '../utils/near-utils';
-import { getMarketStoragePaid, loadItems } from '../state/views';
+import { getMarketStoragePaid, getSupgetSupply, ply, loadItems, getSupply } from '../state/views';
 import { handleAcceptOffer, handleRegisterStorage, handleSaleRemove, handleSaleUpdate } from '../state/actions';
 import { useHistory } from '../utils/history';
 import {Token} from './Token';
 import { PopUp } from './PopUp';
 import { InputMyNFT } from './InputMyNFT';
 import { UserIconName } from './UserIconName';
+import Avatar from 'url:../img/Cookie.png';
+
 
 
 const PATH_SPLIT = '?t=';
@@ -29,9 +31,10 @@ const sortFunctions = {
 };
 
 
-export const Gallery = ({ app, views, update, contractAccount, account, loading, dispatch }) => {
+export const Gallery = ({ app, views, update, contractAccount, account, dispatch, suply,state }) => {
+
 	if (!contractAccount) return null;
-	
+
 	const { tab, sort, filter } = app;
 	const { tokens, sales, allTokens, marketStoragePaid } = views
 
@@ -50,16 +53,15 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 	//- pop-up
 	const [popUp, setPopUp] = useState({show:false,token:null});
-
+	const [loading, setLoading] = useState(false);
 	useEffect(() => {
 		dispatch(getMarketStoragePaid(account));
+		//dispatch(getSupply(account));
 	}, [])
 
 	useEffect(() => {
-		if (loading) {
-			dispatch(loadItems(account,tokens,sales))
-		}
-	}, [loading,sales,tokens]);
+		dispatch(loadItems(account,tokens,sales,suply))
+	}, [sales,tokens]);
 
 	// path to token
 	const [path, setPath] = useState(window.location.href);
@@ -75,13 +77,12 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 	const currentSales = sales.filter(({ owner_id, sale_conditions }) => account?.accountId === owner_id && Object.keys(sale_conditions || {}).length > 0)
 
-
 	let market = sales;
 	//-if (tab !== 2 && filter === 1) {
 	//-	market = market.concat(allTokens.filter(({ token_id }) => !market.some(({ token_id: t}) => t === token_id)));
 	//-} no queremos nft que no esten a la venta en el market
-	market.sort(sortFunctions[sort]);
-	tokens.sort(sortFunctions[sort]);
+	//market.sort(sortFunctions[sort]);
+	//tokens.sort(sortFunctions[sort]);
 
 
 	const token = market.find(({ token_id }) => tokenId === token_id);
@@ -92,7 +93,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 	return <>
 		{ popUp.show && <PopUp setPopUp={setPopUp} popUp={popUp} formatNearAmount={formatNearAmount} accountId={accountId} account={account}/>}
 		{
-			tab < 3 && 
+			false && tab < 3 && 
 			<center className="containerflex justifyContentCenter mt-3 mb-2" >
 				{
 					false && tab !== 2 && <button className="mx-3 btnSort px-3" onClick={() => update('app.filter', filter === 2 ? 1 : 2)} style={{background: '#fed'}}>{filter === 1 ? 'All' : 'Sales'}</button>
@@ -103,7 +104,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 				}
 			</center>
 		}
-			<div className="containerGrid">
+			<div className="containerGrid mt-5">
 				{
 					tab === 1 && market.map(({
 						metadata: { media },
@@ -114,8 +115,8 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						royalty = {}
 					}) =>
 						<>
-							<div key={token_id} className="containerFlex flexColumn p-2 m-2" style={{borderRadius:"8px",boxShadow:"0px 0px 12px #C8ADA766"}}>
-								<img className="cookieToken mt-3" src={media} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})} />
+							<div key={token_id} className="containerFlex flexColumn p-2 m-2" style={{borderRadius:"8px",boxShadow:"0px 0px 12px #C8ADA766",cursor:'pointer'}} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})}>
+								<img className="cookieToken mt-3" src={media} />
 								{
 									Object.keys(sale_conditions).length > 0 && <>
 										{
@@ -173,10 +174,11 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						</>
 					)
 				}
+				{tab === 1 && state.tokensLoading.sales && <img src={Avatar} className="cookieSpinner" style={{margin:"100px auto",gridColumnStart:"3"}}/>}
 			</div>
 		{
 			tab === 2 && <>
-				{!tokens.length && <p className="margin">You dont have any NFTs. Try minting something!</p>}
+				{!tokens.length && !state.tokensLoading.sales && <p className="margin">You dont have any NFTs. Try minting something!</p>}
 					<div className="containerGrid">
 				{
 					tokens.map(({
@@ -227,9 +229,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 								{
 									accountId === owner_id && sale_conditions.near && <>
 									<div>
-										<InputMyNFT account={account} token_id={token_id} text="Update Price..."/>
+										<InputMyNFT account={account} token_id={token_id} text="Update Price..." setLoading={setLoading}/>
 									</div>
-									<button onClick={() => { handleSaleRemove(account, token_id)}}>Remove From Market</button>
+									<button onClick={() => { setLoading('true');handleSaleRemove(account, token_id)}}>Remove From Market</button>
 								</>
 								}
 								{
@@ -237,7 +239,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 										<div>
 											<h4 className="textCenter mt-2 mb-3">Add To Sale</h4>
 
-											<InputMyNFT account={account} token_id={token_id} text="Add Price..."/>
+											<InputMyNFT account={account} token_id={token_id} text="Add Price..." setLoading={setLoading}/>
 										</div>
 										<div className="textCenter">
 											<span style={{ fontSize: '0.75rem' }}>Price 0 means open offers</span>
@@ -255,7 +257,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 											</div>
 											{
 												accountId === owner_id &&
-												<button className="w-100" onClick={() => handleAcceptOffer(account, token_id, ft_token_id)}>Accept {formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</button>
+												<button className="w-100" onClick={() => {setLoading('true');handleAcceptOffer(account, token_id, ft_token_id)}}>Accept {formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</button>
 											}
 										</div>) )
 									}
@@ -271,6 +273,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					</div>
 					)
 				}
+				{loading && <div className='backgroundPopUp2'><img src={Avatar} className="cookieSpinner"/></div>}
+				{tab === 2 && state.tokensLoading.sales && <img src={Avatar} className="cookieSpinner" style={{margin:"100px auto",gridColumnStart:"3"}}/>}
+
 					</div>
 			</>
 		}

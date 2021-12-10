@@ -6,13 +6,15 @@ import { formatAccountId } from '../utils/near-utils'
 import * as nearAPI from 'near-api-js';
 import { MyOfferInput } from './MyOfferInput';
 import { UserIconName } from './UserIconName';
+import Avatar from 'url:../img/Cookie.png';
+
 
 const {
 	utils: { format: { formatNearAmount } }
 } = nearAPI;
 
 
-export const MyOffers = ({views,account}) => {
+export const MyOffers = ({views,account,state}) => {
 
     const tokensWhitOffers = views.sales.filter(sale=> sale.bids.near?.length > 0 && sale?.bids.near[sale?.bids.near.length-1].owner_id === account.accountId);
     
@@ -35,6 +37,17 @@ export const MyOffers = ({views,account}) => {
                                 }
                                 <UserIconName accountId={account.accountId} owner_id={token.owner_id}/>
                                 {
+                                    Object.keys(token.bids).length > 0 && <>
+                                        {
+                                            Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.filter(element=>element===ft_token_bids[ft_token_bids.length-1]).map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
+                                                { 
+                                                    <h4 className='textCenter'>You Offer {formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</h4>
+                                                }
+                                            </div>) )
+                                        }
+                                    </>
+                                }
+                                {
                                     <>
                                         {
                                             account.accountId.length > 0 && account.accountId !== token.owner_id && <div className="containerFlex">
@@ -43,21 +56,11 @@ export const MyOffers = ({views,account}) => {
                                         }
                                     </>
                                 }
-                                {
-                                    Object.keys(token.bids).length > 0 && <>
-                                        {
-                                            Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.filter(element=>element===ft_token_bids[ft_token_bids.length-1]).map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
-                                                { 
-                                                    <button className="w-100" onClick={() => handleBidRemove(account, token.token_id)}>Remove {formatNearAmount(price, 4)} {token2symbol[ft_token_id]} Offer</button>
-                                                }
-                                            </div>) )
-                                        }
-                                    </>
-                                }
                             </div>
                         </div>
                     )
                 }
+				{state.tokensLoading.sales && <img src={Avatar} className="cookieSpinner" style={{margin:"100px auto",gridColumnStart:"3"}}/>}
             </div>
     )
 }

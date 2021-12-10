@@ -37,7 +37,7 @@ export const PopUp = ({setPopUp,popUp,formatNearAmount,accountId,account}) => {
 		|| parseFloat(offerPrice) > parseFloat(bid) && parseFloat(offerPrice) < parseFloat(price) && offerPrice !== ''  
 		){
 			setShow(show=>!show);
-			handleOffer(account, popUp.token.token_id, offerToken, offerPrice === '' ? price : offerPrice );
+			handleOffer(account, popUp.token.token_id, offerToken, offerPrice );
 		}
 		
 
@@ -103,7 +103,7 @@ export const PopUp = ({setPopUp,popUp,formatNearAmount,accountId,account}) => {
 											</div>
 											{
 												accountId === popUp.token.owner_id &&
-												<button onClick={() => handleAcceptOffer(account, popUp.token.token_id, ft_token_id)}>Accept</button>
+												<button onClick={() => {setShow(false);handleAcceptOffer(account, popUp.token.token_id, ft_token_id)}}>Accept</button>
 											}
 										</div>) )
 									}
@@ -115,7 +115,7 @@ export const PopUp = ({setPopUp,popUp,formatNearAmount,accountId,account}) => {
 				</div>
 			}
 			{
-				!show && <img src={Avatar} className="cookieSpinner"/>
+				!show && <div className='backgroundPopUp2'><img src={Avatar} className="cookieSpinner"/></div>
 			}
 		</div>
     )

@@ -17,7 +17,7 @@ import { MyOffers } from './components/MyOffers';
 const App = () => {
 	const { state, dispatch, update } = useContext(appStore);
 	
-	const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading } = state;
+	const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading , suply  } = state;
 
 	const [profile, setProfile] = useState(false);
 
@@ -35,7 +35,7 @@ const App = () => {
 
 	return <>
 		{ loading && <div className="loading">
-			<img src={NearLogo} />
+			<img className='cookieSpinner' src={Avatar} />
 		</div>
 		}
 		{
@@ -81,13 +81,13 @@ const App = () => {
 		{ signedIn && tab === 3 &&
 			<div id="contract">
 				{
-					<MyOffers views={views} account={account}/>
+					<MyOffers views={views} account={account} state={state}/>
 					//<Contract {...{ near, update, wallet, account }} />
 				}
 			</div>
 		}
 		<div id="gallery">
-			<Gallery {...{ app, views, update, loading, contractAccount, account, dispatch }} />
+			<Gallery {...{ app, views, update, contractAccount, account, dispatch,suply,state }} />
 		</div>
 	</>;
 };

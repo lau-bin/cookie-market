@@ -20,12 +20,31 @@ export const getMarketStoragePaid = (account) => async ({ update, getState }) =>
     })
 }
 
-export const loadItems = (account,stateTokens,stateSales) => async ({ update, getState }) => {
+export const getSupply = (account) => async ({ update, getState }) => {
 
-    const indexTokens= stateTokens.length.toString();
-    const indexSales= stateSales.length.toString();
+        const { contractAccount } = getState()
+        let userSuply='0';
+        let salesSuply ='0';
+        salesSuply = await contractAccount.viewFunction(marketId, 'get_supply_sales');
+        if (account) {
+            userSuply = await contractAccount.viewFunction(marketId, 'get_supply_by_owner_id', { account_id: account.accountId });
+        }
+        update("suply",{total:salesSuply,user:userSuply});
+}
+
+export const loadItems = (account,stateTokens,stateSales,suply) => async ({ update, getState }) => {
+
     const { contractAccount } = getState()
-	
+
+    let salesSuply=suply.total;
+    
+    if(salesSuply==0) salesSuply = await contractAccount.viewFunction(marketId, 'get_supply_sales');
+    
+    let salesLimit= parseInt(salesSuply) - stateSales.length >= 50 ? 50 : parseInt(salesSuply) - stateSales.length; 
+    
+    let indexTokens= stateTokens.length.toString();
+    let indexSales= (parseInt(salesSuply) - stateSales.length - salesLimit).toString();
+
     /// user tokens
     let tokens = []
     if (account) {
@@ -65,7 +84,7 @@ export const loadItems = (account,stateTokens,stateSales) => async ({ update, ge
             batch: {
                 from_index: indexSales, // must be name of contract arg (above)
                 limit: '1000', // must be name of contract arg (above)
-                step: 50, // divides contract arg 'limit'
+                step: salesLimit, // divides contract arg 'limit'
                 flatten: [], // how to combine results
             },
             sort: {
@@ -77,7 +96,7 @@ export const loadItems = (account,stateTokens,stateSales) => async ({ update, ge
         sales = await contractAccount.viewFunction(marketId, 'get_sales_by_nft_contract_id', {
             nft_contract_id: contractId,
             from_index: indexSales,
-            limit: 50
+            limit: salesLimit
         });
     }
     const saleTokens = await contractAccount.viewFunction(contractId, 'nft_tokens_batch', {
@@ -125,9 +144,31 @@ export const loadItems = (account,stateTokens,stateSales) => async ({ update, ge
 
     allTokens = allTokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
     */
-    
-    tokens.length === 0 ? update('tokensLoading.tokens',false) : update('views.tokens', [...tokens , ...stateTokens]);
-    sales.length === 0 ? update('tokensLoading.sales',false) : update('views.sales', [...sales , ...stateSales]);
-    tokens.length === 0 && sales.length === 0 && update('loading',false);
+    const {views} = getState();
+    sales=sales.reverse();
+    tokens=tokens.reverse();
+    if(tokens.length === 0 && sales.length === 0){
+        update('tokensLoading', {
+            sales:false,
+            tokens:false
+        });
+    }else if(sales.length === 0){
+        update('views', {
+            ...views,
+            tokens:[...tokens , ...stateTokens],
+        });
+    }else if(tokens.length === 0){
+        update('views', {
+            ...views,
+            sales:[...stateSales , ...sales] 
+        });
+    }else{
+        update('views', {
+            ...views,
+            tokens:[...tokens , ...stateTokens],
+            sales:[...stateSales , ...sales] 
+        });
+    }
+    update("suply",{total:salesSuply,user:0});
     return { tokens, sales }
 };
