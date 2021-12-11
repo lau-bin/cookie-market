@@ -41,10 +41,10 @@ export const PopUp = ({setPopUp,popUp,formatNearAmount,accountId,account}) => {
 		}
 		
 
-		if (offerPrice === "") setFeedBack("you must make an offer");
-		else if (parseFloat(bid) === 0 && parseFloat(offerPrice) <= 0) setFeedBack("offer must be greater than 0");
-		else if (parseFloat(offerPrice) <= parseFloat(bid)) setFeedBack("offer must be greater than last bid");
-		else if (parseFloat(offerPrice) >= parseFloat(price) && price !== '0') setFeedBack("offer must be less than price");	
+		if (offerPrice === "") setFeedBack("You must make an offer");
+		else if (parseFloat(bid) === 0 && parseFloat(offerPrice) <= 0) setFeedBack("Offer must be greater than 0");
+		else if (parseFloat(offerPrice) <= parseFloat(bid)) setFeedBack("Offer must be greater than last bid");
+		else if (parseFloat(offerPrice) >= parseFloat(price) && price !== '0') setFeedBack("Offer must be less than price");	
 		
 	}
 
@@ -89,7 +89,7 @@ export const PopUp = ({setPopUp,popUp,formatNearAmount,accountId,account}) => {
 									<div className="containerFlex" style={{justifyContent:"space-between"}}>
 										<button style={{width:"80px"}} onClick={ e => handleOfferClick(e) } className="btnOffer">Offer</button>
 									
-										<input style={{margin:"0 !important"}} type="number" placeholder="Place an offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} />
+										<input style={{margin:"0 !important"}} type="number" inputMode='decimal' placeholder="Place an offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} />
 									</div>
 								</div>
 							}

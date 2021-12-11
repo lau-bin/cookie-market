@@ -13,7 +13,7 @@ export const InputMyNFT = ({account,token_id,text,setLoading}) => {
     return (
         <div>
             <div className="containerFlex">
-                <input type="number" placeholder={text} value={price} onChange={(e) => setPrice(e.target.value)} />
+                <input type="number" inputMode='decimal' placeholder={text} value={price} onChange={(e) => setPrice(e.target.value)} />
                 <button onClick={() => {
                     if (!price.length || parseFloat(price) < 0) {
                         console.log(price)

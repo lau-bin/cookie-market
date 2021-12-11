@@ -31,15 +31,15 @@ export const MyOfferInput = ({token,account,formatNearAmount}) => {
 		}
 		
 
-		if (offerPrice === "") setFeedBack("you must make an offer");
-		else if (parseFloat(offerPrice) <= parseFloat(bid)) setFeedBack("offer must be greater than last bid");
-		else if (parseFloat(offerPrice) >= parseFloat(price) && price !== '0') setFeedBack("offer must be less than price");	
+		if (offerPrice === "") setFeedBack("You must make an offer");
+		else if (parseFloat(offerPrice) <= parseFloat(bid)) setFeedBack("Offer must be greater than last bid");
+		else if (parseFloat(offerPrice) >= parseFloat(price) && price !== '0') setFeedBack("Offer must be less than price");	
 		
 	}
 
     return (
         <>
-            <input type="number" placeholder="New Offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} />
+            <input type="number" inputMode='decimal' placeholder="New Offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} />
             <button className="ml-1" onClick={e => handleOfferClick(e)}>Update</button>
 			{feedBack!=="" && <BuyPopUp handleBuyClick={handleBuyClick} price={price} setFeedBack={setFeedBack} feedBack={feedBack}/>}
 			{loading && <div className='backgroundPopUp2'><img src={Avatar} className="cookieSpinner"/></div>}

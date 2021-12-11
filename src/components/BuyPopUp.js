@@ -21,7 +21,7 @@ export const BuyPopUp = ({handleBuyClick,price,setFeedBack,feedBack}) => {
                     
                     <h4 style={{textAlign:"center"}}>{feedBack}</h4>
                     {
-                        feedBack === "offer must be less than price" ? 
+                        feedBack === "Offer must be less than price" ? 
                         <button style={{marginBottom:"10px"}} onClick={ e => handleBuyClick(e) } className="btnBuy" style={{alignSelf:"center"}}>Buy For {price} Near</button> :
                         <button style={{marginBottom:"10px"}} onClick={ e => setFeedBack("") } className="btnBuy" style={{alignSelf:"center"}}>Ok</button> 
                     }
