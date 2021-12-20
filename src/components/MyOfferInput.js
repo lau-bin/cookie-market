@@ -25,11 +25,11 @@ export const MyOfferInput = ({token,account,formatNearAmount}) => {
 
 	const handleOfferClick = (e) =>{
 
-		if(parseFloat(offerPrice) > parseFloat(bid) && parseFloat(offerPrice) < parseFloat(price) && offerPrice !== ''  ){
+		if(parseFloat(offerPrice) > parseFloat(bid) && parseFloat(offerPrice) < parseFloat(price) && offerPrice !== ''  
+		|| parseFloat(offerPrice) > parseFloat(bid) && parseFloat(price) === 0 && offerPrice !== ''){
 			setLoading(true);
 			handleOffer(account, token.token_id, offerToken, offerPrice );
 		}
-		
 
 		if (offerPrice === "") setFeedBack("You must make an offer");
 		else if (parseFloat(offerPrice) <= parseFloat(bid)) setFeedBack("Offer must be greater than last bid");
@@ -39,8 +39,8 @@ export const MyOfferInput = ({token,account,formatNearAmount}) => {
 
     return (
         <>
-            <input type="number" inputMode='decimal' placeholder="New Offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} />
-            <button className="ml-1" onClick={e => handleOfferClick(e)}>Update</button>
+            <input style={{marginRight:"5px"}} type="number" inputMode='decimal' placeholder="New Offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} onKeyDown={e=>{if(e.key==='Enter')handleOfferClick(e)}}/>
+            <button onClick={e => handleOfferClick(e)}>Update</button>
 			{feedBack!=="" && <BuyPopUp handleBuyClick={handleBuyClick} price={price} setFeedBack={setFeedBack} feedBack={feedBack}/>}
 			{loading && <div className='backgroundPopUp2'><img src={Avatar} className="cookieSpinner"/></div>}
         </>

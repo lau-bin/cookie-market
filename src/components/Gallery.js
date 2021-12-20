@@ -31,7 +31,7 @@ const sortFunctions = {
 };
 
 
-export const Gallery = ({ app, views, update, contractAccount, account, dispatch, suply,state }) => {
+export const Gallery = ({ app, views, update, contractAccount, account, dispatch, suply,state,signedIn }) => {
 
 	if (!contractAccount) return null;
 
@@ -115,14 +115,14 @@ export const Gallery = ({ app, views, update, contractAccount, account, dispatch
 						royalty = {}
 					}) =>
 						<>
-							<div key={token_id} className="containerFlex flexColumn p-2 m-2" style={{borderRadius:"8px",boxShadow:"0px 0px 12px #C8ADA766",cursor:'pointer'}} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})}>
+							<div key={token_id} className="containerFlex flexColumn p-2 pb-4 m-2" style={{borderRadius:"8px",boxShadow:"0px 0px 12px #C8ADA766",cursor:'pointer'}} onClick={() => setPopUp({show:true,token:{media,sale_conditions,accountId,owner_id,token_id,bids}})}>
 								<img className="cookieToken mt-3" src={media} />
 								{
 									Object.keys(sale_conditions).length > 0 && <>
 										{
 											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="mt-3 mb-2" style={{display:"block",margin:"auto",fontSize:"12px"}} key={ft_token_id}>
-												<span className="textWhite textBolder" style={{background: "#D18436", borderRadius: "5px", padding:"2px 10px"}}>
-													{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]}
+												<span className="textWhite" style={{background: "#D18436", borderRadius: "5px", padding:"2px 10px"}}>
+													{price === '0' ? 'OPEN Offers' : `${formatNearAmount(price, 4)} NEAR` }
 												</span>
 											</div>)
 										}
@@ -174,14 +174,19 @@ export const Gallery = ({ app, views, update, contractAccount, account, dispatch
 						</>
 					)
 				}
+			</div>
+			<div className="containerGrid">
 				{tab === 1 && state.tokensLoading.sales && <img src={Avatar} className="cookieSpinner" style={{margin:"100px auto",gridColumnStart:"3"}}/>}
 			</div>
+
 		{
 			tab === 2 && <>
-				{!tokens.length && !state.tokensLoading.sales && <p className="margin">You dont have any NFTs. Try minting something!</p>}
+				{!signedIn && <h4 style={{margin:"100px auto",textAlign:"center"}}>Connect your wallet</h4>}
+
+				{signedIn && !tokens.length && !state.tokensLoading.sales && <h4 style={{margin:"100px auto",textAlign:"center"}}>You dont have any NFTs</h4>}
 					<div className="containerGrid">
 				{
-					tokens.map(({
+					signedIn && tokens.map(({
 						metadata: { media },
 						owner_id,
 						token_id,
@@ -189,9 +194,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, dispatch
 						bids = {},
 						royalty = {}
 					}) => 
-					<div>
-						<div key={token_id} className="containerFlex flexColumn p-2 m-2" style={{borderRadius:"8px",boxShadow:"0px 0px 12px #C8ADA766"}}>
-						<img className="cookieToken mt-3" src={media} />
+					<div key={token_id}>
+						<div className="containerFlex flexColumn p-2 m-2" style={{borderRadius:"8px",boxShadow:"0px 0px 12px #C8ADA766"}}>
+						<img className="cookieToken mt-3 mb-2" src={media} />
 						{
 							marketStoragePaid !== '0' ? <>
 								{	false && <h4>Royalties</h4> }
@@ -206,9 +211,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, dispatch
 								{
 									Object.keys(sale_conditions).length > 0 && <>
 										{
-											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="textCenter my-2" key={ft_token_id}>
-												<h4 className="textCenter">
-													{price === '0' ? 'open' : formatNearAmount(price, 4)} {token2symbol[ft_token_id]} In Market
+											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="textCenter" key={ft_token_id}>
+												<h4 style={{marginBottom:"5px", background:"#915731", color:"white", borderRadius:"5px",padding:"2px 0",margin:"5px 0"}} className="textCenter">
+													{price === '0' ? 'OPEN Offers' : `${formatNearAmount(price, 4)} NEAR` } In Market
 												</h4>
 											</div>)
 										}
@@ -237,32 +242,35 @@ export const Gallery = ({ app, views, update, contractAccount, account, dispatch
 								{
 									accountId === owner_id && !sale_conditions.near && <>
 										<div>
-											<h4 className="textCenter mt-2 mb-3">Add To Sale</h4>
+											<h4 style={{marginBottom:"5px", background:"#915731", color:"white", borderRadius:"5px",padding:"2px 0",margin:"5px 0"}} className="textCenter">Add To Sale</h4>
 
 											<InputMyNFT account={account} token_id={token_id} text="Add Price..." setLoading={setLoading}/>
 										</div>
 										<div className="textCenter">
-											<span style={{ fontSize: '0.75rem' }}>Price 0 means open offers</span>
+											<span style={{ fontSize: '0.70rem' }}>Price 0 means open offers</span>
 										</div>
 									</>
 								}
+								<div style={{minHeight:"0px"}}>
 								{Object.keys(bids).length > 0 && 
 								<>
 									{
 											Object.entries(bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.filter(element=>element===ft_token_bids[ft_token_bids.length-1]).map(({ owner_id: bid_owner_id, price }) => 
-											<div className="offers" key={ft_token_id}>
-											<div>
-											<h4>Offer by {formatAccountId(bid_owner_id,17)}</h4>
+											<div style={{display:"flex",justifyContent:"space-between",marginTop:"5px"}} key={ft_token_id}>
+											<div style={{display:"flex",flexDirection:"column",marginRight:"5px",textAlign:"end"}}>
+											<span style={{ fontSize: '0.6rem' ,fontWeight:"bolder",color:"#0008"}}> Offer From</span>
+											<span style={{ fontSize: '0.6rem' ,fontWeight:"bolder"}}> {formatAccountId(bid_owner_id,17)}</span>
 												
 											</div>
 											{
 												accountId === owner_id &&
-												<button className="w-100" onClick={() => {setLoading('true');handleAcceptOffer(account, token_id, ft_token_id)}}>Accept {formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</button>
+												<button style={{padding:"4px",flexGrow:'1'}} className="" onClick={() => {setLoading('true');handleAcceptOffer(account, token_id, ft_token_id)}}>Accept {formatNearAmount(price, 2)} N</button>
 											}
 										</div>) )
 									}
 								</>
-							}
+								}
+								</div>
 							</>
 								:
 								<div className="center">
@@ -274,8 +282,10 @@ export const Gallery = ({ app, views, update, contractAccount, account, dispatch
 					)
 				}
 				{loading && <div className='backgroundPopUp2'><img src={Avatar} className="cookieSpinner"/></div>}
-				{tab === 2 && state.tokensLoading.sales && <img src={Avatar} className="cookieSpinner" style={{margin:"100px auto",gridColumnStart:"3"}}/>}
 
+					</div>
+					<div className="containerGrid">
+				{tab === 2 && signedIn && state.tokensLoading.sales && <img src={Avatar} className="cookieSpinner" style={{margin:"100px auto",gridColumnStart:"3"}}/>}
 					</div>
 			</>
 		}

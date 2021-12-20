@@ -13,6 +13,7 @@ import NearLogo from 'url:./img/near_icon.svg';
 import './App.scss';
 import './bootstrap.css';
 import { MyOffers } from './components/MyOffers';
+import { formatAccountId } from './utils/near-utils';
 
 const App = () => {
 	const { state, dispatch, update } = useContext(appStore);
@@ -20,6 +21,8 @@ const App = () => {
 	const { app, views, app: {tab, snack}, near, wallet, contractAccount, account, loading , suply  } = state;
 
 	const [profile, setProfile] = useState(false);
+
+	const [show, setShow] = useState(false)
 
 	const onMount = () => {
 		dispatch(onAppMount());
@@ -52,17 +55,20 @@ const App = () => {
 						<img className="logo" src={Logo}/>
 					</div>
 					<div id="tabs">
+						<div className="links" ><span><a style={{textDecoration:"none",color:"#915731"}} href='https://www.google.com'>Minting</a></span><div className='menuNoSelected'></div></div>
+						<div className="links" ><span><a style={{textDecoration:"none",color:"#915731"}} href='https://www.google.com'>FAQ</a></span><div className='menuNoSelected'></div></div>
 						<div className="links" onClick={() => update('app.tab', 1)}><span> Market</span><div className={ tab === 1 ? 'menuSelected' : 'menuNoSelected' }></div></div>
 						<div className="links" onClick={() => update('app.tab', 2)}><span> My&nbsp;NFTs</span><div className={ tab === 2 ? 'menuSelected' : 'menuNoSelected' }></div></div>
 						<div className="links" onClick={() => update('app.tab', 3)}><span> My&nbsp;Offers</span><div className={ tab === 3 ? 'menuSelected' : 'menuNoSelected' }></div></div>
 					</div>
 				</div>
 				<div>
-					{!signedIn ? <Wallet {...{ wallet }} /> : <div onClick={() => setProfile(!profile)} style={{cursor:"pointer"}}>{account.accountId}</div>}
+					{!signedIn ? <Wallet {...{ wallet }} setShow={setShow} /> : <button className='btnConnectWallet' onClick={() => setProfile(!profile)} style={{cursor:"pointer"}}>{formatAccountId(account.accountId.toUpperCase(),20)}</button>}
+				</div>
 				</div>
 				{
 					profile && signedIn && 
-						<div id="profile">
+						<div >
 							<div>
 								{
 									wallet && wallet.signedIn && <Wallet {...{ wallet, account, update, dispatch, handleClose: () => setProfile(false) }} />
@@ -70,13 +76,9 @@ const App = () => {
 							</div>
 						</div>
 				}
-			</div>
 		</div>
 		
-
-		{
-			
-		}
+		{!signedIn && tab === 3 && <h4 style={{margin:"148px auto",textAlign:"center"}}>Connect your wallet</h4>}
 
 		{ signedIn && tab === 3 &&
 			<div id="contract">
@@ -87,7 +89,12 @@ const App = () => {
 			</div>
 		}
 		<div id="gallery">
-			<Gallery {...{ app, views, update, contractAccount, account, dispatch,suply,state }} />
+			<Gallery {...{ app, views, update, contractAccount, account, dispatch,suply,state,signedIn }} />
+		</div>
+		{show && <div className='backgroundPopUp2'><img src={Avatar} className="cookieSpinner"/></div>}
+		<div style={{height:'100px',width:'100%'}}></div>
+		<div style={{height:'70px',width:'100%',background:'#915731',position:'absolute',bottom:'0px',display:'flex',justifyContent:'center',zIndex:"-1"}}>
+			<p style={{color:'white',alignSelf:'center',margin:'auto'}}>Made In North Pole &#47; Copyright &#174; 2021</p>
 		</div>
 	</>;
 };

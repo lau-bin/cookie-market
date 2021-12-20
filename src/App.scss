@@ -9,6 +9,11 @@ body {
     background: #F8EDE7 !important;
 }
 
+#root{
+    min-height: 100vh;
+    position:relative
+}
+
 .snack {
     z-index: 10000;
     position: fixed;
@@ -184,10 +189,9 @@ body {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                padding: 0px;
+                padding: 10px;
 
                 position: static;
-                width: 82px;
                 height: 17px;
                 left: 175px;
                 top: 0px;
@@ -266,7 +270,8 @@ body {
         padding: 10px 20px;
 
         position: static;
-        width: 152px;
+        min-width: 160px;
+        max-width: 180px;
         height: 32px;
         left: 1008px;
         top: 24px;
@@ -277,19 +282,6 @@ body {
         border-radius: 8px;
     }
 
-    #profile {
-        position: absolute;
-        padding: 16px;
-        border-bottom: 2px solid #ddd;
-        background: white;
-        z-index: 9999;
-        top: 128px;
-        height: 300px;
-        margin:0 220px;
-        width: 440px;
-        text-align: center;
-        
-    }
 }
 
 .line {
@@ -311,13 +303,13 @@ body {
 h4 {
     color:#915731;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 14px !important;
+    font-size: 12px !important;
     font-weight: bolder;
     margin: 16px 0;
 }
 
 input {
-    border: 2px solid #915731;
+    border: 1px solid #915731;
     color: #915731;
     background-color: #F8EDE7 !important;
     box-sizing: border-box;
@@ -334,10 +326,10 @@ input {
 button {
     border: 2px solid #D18436;
     color:white;
-    background-color: #D18436 !important;
+    background-color: #D18436;
     box-sizing: border-box;
     font-weight:900;
-    font-size: 12px !important;
+    font-size: 10px !important;
     border-radius: 8px !important;
     padding: 4px 8px;
     cursor: pointer;
@@ -364,7 +356,7 @@ input::placeholder{
 
 }
 
-#btnConnectWallet{
+.btnConnectWallet{
     color:white !important;
     background: #915731 !important;
     border: 3px solid #D18436 !important;
@@ -454,13 +446,13 @@ input::placeholder{
 
 }
 
-.popUp img .cookieInfo{
+.popUp .cookieInfo{
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-AROUND;
     align-items: flex-start;
-    padding: 80px 0px;
+    padding: 40px 0px;
 
     position: static;
     width: 240px;
@@ -470,7 +462,7 @@ input::placeholder{
 
 }
 
-.popUp img .cookieInfo .frame1{
+.popUp .cookieInfo .frame1{
 
     display: flex;
     flex-direction: column;
@@ -485,7 +477,7 @@ input::placeholder{
 
 }
 
-.popUp img .cookieInfo .frame1 .frameMetaInfoe1{
+.popUp .cookieInfo .frame1 .frameMetaInfoe1{
 
     display: flex;
     flex-direction: row;
@@ -501,7 +493,7 @@ input::placeholder{
 
 }
 
-.popUp img .cookieInfo .frame1 .frameMetaInfoe1 .cost{
+.popUp .cookieInfo .frame1 .frameMetaInfoe1 .cost{
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -519,7 +511,7 @@ input::placeholder{
 
 }
 
-.popUp img .cookieInfo .frame1 .frameMetaInfoe1 .owner{
+.popUp .cookieInfo .frame1 .frameMetaInfoe1 .owner{
 
     display: flex;
     flex-direction: row;
@@ -555,12 +547,12 @@ span.cost{
 
 .cookieSpinner{
     width: 70px !important;
-    position: relative;
     margin: auto;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-duration: .8s;
-    animation-name: spinner-loading
+    animation-name: spinner-loading;
+    z-index: -1;
  }
 
 
