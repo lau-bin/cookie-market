@@ -91,9 +91,8 @@ export const PopUp = ({setPopUp,popUp,formatNearAmount,accountId,account}) => {
 										<h4 style={{margin:"0",alignSelf:"center",color:"#915731"}}>- or -</h4>
 									</>}
 									<div className="containerFlex" style={{justifyContent:"space-between"}}>
-										<button style={{width:"80px",marginRight:'5px'}} onClick={ e => handleOfferClick(e) } className="btnOffer">Offer</button>
-									
-										<input style={{margin:"0 !important"}} type="number" inputMode='decimal' placeholder="Place an offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} onKeyDown={e=>{if(e.key==='Enter') handleOfferClick(e)}}/>
+										<input style={{margin:"0 !important",borderRadius:'8px 0 0 8px'}} type="number" inputMode='decimal' placeholder="Place an offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} onKeyDown={e=>{if(e.key==='Enter') handleOfferClick(e)}}/>
+										<button style={{width:"80px",borderRadius:'0 8px 8px 0'}} onClick={ e => handleOfferClick(e) } className="btnOffer">Offer</button>
 									</div>
 								</div>
 							}

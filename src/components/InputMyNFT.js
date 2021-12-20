@@ -39,8 +39,8 @@ export const InputMyNFT = ({account,token_id,text,setLoading}) => {
     return (
         <div>
             <div className="containerFlex" style={{marginBottom:"5px"}}>
-                <input onKeyDown={handleEnterKey} type="number" inputMode='decimal' placeholder={text} style={{marginRight:"5px"}} value={price} onChange={(e) => setPrice(e.target.value)} />
-                <button onClick={ sendUpdate }>Add</button>
+                <input style={{borderRadius:'8px 0 0 8px'}} onKeyDown={handleEnterKey} type="number" inputMode='decimal' placeholder={text} value={price} onChange={(e) => setPrice(e.target.value)} />
+                <button style={{borderRadius:'0 8px 8px 0'}} onClick={ sendUpdate }>Add</button>
     			{feedBack!=="" && <BuyPopUp handleBuyClick={null} price={price} setFeedBack={setFeedBack} feedBack={feedBack}/>}
             </div>
         </div>
