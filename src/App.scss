@@ -309,7 +309,8 @@ h4 {
 }
 
 input {
-    border: 1px solid #915731;
+    border: 1px solid #D18436;
+    border-right: 0px;
     color: #915731;
     background-color: #F8EDE7 !important;
     box-sizing: border-box;
@@ -324,9 +325,9 @@ input {
 }
 
 button {
-    border: 2px solid #D18436;
+    border: 2px solid #D18436 !important;
     color:white;
-    background-color: #D18436;
+    background-color: #915731;
     box-sizing: border-box;
     font-weight:900;
     font-size: 10px !important;
@@ -338,15 +339,6 @@ button {
 input::placeholder{
     font-size: 10px;
     color: #915731;
-}
-
-.btnBuy{
-    color: white;
-    background-color: #D18436 !important;
-}
-
-.btnOffer{
-    background-color: #D18436;
 }
 
 .btnSort{
@@ -554,6 +546,9 @@ span.cost{
     z-index: -1;
  }
 
+button.bl{
+    border-left: #915731 !important;
+}
 
 @keyframes spinner-loading{
   

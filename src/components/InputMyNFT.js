@@ -40,7 +40,7 @@ export const InputMyNFT = ({account,token_id,text,setLoading}) => {
         <div>
             <div className="containerFlex" style={{marginBottom:"5px"}}>
                 <input style={{borderRadius:'8px 0 0 8px'}} onKeyDown={handleEnterKey} type="number" inputMode='decimal' placeholder={text} value={price} onChange={(e) => setPrice(e.target.value)} />
-                <button style={{borderRadius:'0 8px 8px 0'}} onClick={ sendUpdate }>Add</button>
+                <button style={{borderRadius:'0 8px 8px 0'}} className='bl' onClick={ sendUpdate }>{text==='Add Price...'?'Add':'Update'}</button>
     			{feedBack!=="" && <BuyPopUp handleBuyClick={null} price={price} setFeedBack={setFeedBack} feedBack={feedBack}/>}
             </div>
         </div>

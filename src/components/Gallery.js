@@ -212,7 +212,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, dispatch
 									Object.keys(sale_conditions).length > 0 && <>
 										{
 											Object.entries(sale_conditions).map(([ft_token_id, price]) => <div className="textCenter" key={ft_token_id}>
-												<h4 style={{marginBottom:"5px", background:"#915731", color:"white", borderRadius:"5px",padding:"2px 0",margin:"5px 0"}} className="textCenter">
+												<h4 style={{background:"#D18436", color:"white", borderRadius:"5px",padding:"2px 0",margin:"5px 0 15px 0"}} className="textCenter">
 													{price === '0' ? 'OPEN Offers' : `${formatNearAmount(price, 4)} NEAR` } In Market
 												</h4>
 											</div>)
@@ -242,7 +242,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, dispatch
 								{
 									accountId === owner_id && !sale_conditions.near && <>
 										<div>
-											<h4 style={{marginBottom:"5px", background:"#915731", color:"white", borderRadius:"5px",padding:"2px 0",margin:"5px 0"}} className="textCenter">Add To Sale</h4>
+											<h4 style={{background:"#D18436", color:"white", borderRadius:"5px",padding:"2px 0",margin:"5px 0 15px 0"}} className="textCenter">Add To Sale</h4>
 
 											<InputMyNFT account={account} token_id={token_id} text="Add Price..." setLoading={setLoading}/>
 										</div>

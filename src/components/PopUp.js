@@ -87,12 +87,12 @@ export const PopUp = ({setPopUp,popUp,formatNearAmount,accountId,account}) => {
 							{accountId.length > 0 && accountId !== popUp.token.owner_id && 
 								<div style={{display:"flex",flexDirection:"column"}}>
 									{parseFloat(price) > 0 && <>
-										<button style={{width:"100%",margin:"0 !important"}} onClick={ e => handleBuyClick(e) } className="btnBu">Buy For {price} NEAR</button>
+										<button style={{width:"100%",margin:"0 !important"}} onClick={ e => handleBuyClick(e) } >Buy For {price} NEAR</button>
 										<h4 style={{margin:"0",alignSelf:"center",color:"#915731"}}>- or -</h4>
 									</>}
 									<div className="containerFlex" style={{justifyContent:"space-between"}}>
 										<input style={{margin:"0 !important",borderRadius:'8px 0 0 8px'}} type="number" inputMode='decimal' placeholder="Place an offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} onKeyDown={e=>{if(e.key==='Enter') handleOfferClick(e)}}/>
-										<button style={{width:"80px",borderRadius:'0 8px 8px 0'}} onClick={ e => handleOfferClick(e) } className="btnOffer">Offer</button>
+										<button style={{width:"80px",borderRadius:'0 8px 8px 0'}} onClick={ e => handleOfferClick(e) } className="bl">Offer</button>
 									</div>
 								</div>
 							}

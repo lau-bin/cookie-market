@@ -44,7 +44,7 @@ export const MyOffers = ({views,account,state}) => {
                                         {
                                             Object.entries(token.bids).map(([ft_token_id, ft_token_bids]) => ft_token_bids.filter(element=>element===ft_token_bids[ft_token_bids.length-1]).map(({ owner_id: bid_owner_id, price }) => <div className="offers" key={ft_token_id}>
                                                 { 
-                                                    <h4 style={{marginBottom:"5px", background:"#915731", color:"white", borderRadius:"5px",padding:"2px 0"}} className='textCenter'>You Offer {formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</h4>
+                                                    <h4 style={{marginTop:'10px',marginBottom:"5px", background:"#D18436", color:"white", borderRadius:"5px",padding:"2px 0"}} className='textCenter'>You Offer {formatNearAmount(price, 4)} {token2symbol[ft_token_id]}</h4>
                                                 }
                                             </div>) )
                                         }
@@ -53,7 +53,8 @@ export const MyOffers = ({views,account,state}) => {
                                 {
                                     <>
                                         {
-                                            account.accountId.length > 0 && account.accountId !== token.owner_id && <div className="containerFlex">
+                                            account.accountId.length > 0 && account.accountId !== token.owner_id && 
+                                            <div className="containerFlex">
                                                 <MyOfferInput token={token} account={account} formatNearAmount={formatNearAmount}/>
                                             </div>
                                         }

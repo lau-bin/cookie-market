@@ -40,7 +40,7 @@ export const MyOfferInput = ({token,account,formatNearAmount}) => {
     return (
         <>
             <input style={{borderRadius:'8px 0 0 8px'}} type="number" inputMode='decimal' placeholder="New Offer..." value={offerPrice} onChange={(e) => handleInputChange(e)} onKeyDown={e=>{if(e.key==='Enter')handleOfferClick(e)}}/>
-            <button style={{borderRadius:'0 8px 8px 0'}} onClick={e => handleOfferClick(e)}>Update</button>
+            <button style={{borderRadius:'0 8px 8px 0'}} className='bl' onClick={e => handleOfferClick(e)}>Update</button>
 			{feedBack!=="" && <BuyPopUp handleBuyClick={handleBuyClick} price={price} setFeedBack={setFeedBack} feedBack={feedBack}/>}
 			{loading && <div className='backgroundPopUp2'><img src={Avatar} className="cookieSpinner"/></div>}
         </>
