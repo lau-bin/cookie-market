@@ -111,7 +111,7 @@ const App = () => {
                   onClick={() => setProfile(!profile)}
                   style={{ cursor: "pointer" }}
                 >
-                  {formatAccountId(account.accountId.toUpperCase(), 20)}
+                  {formatAccountId(account.accountId, 20)}
                 </button>
               )}
             </div>
@@ -170,8 +170,7 @@ const App = () => {
           <img src={Avatar} className="cookieSpinner" />
         </div>
       )}
-      <div style={{ height: "100px", width: "100%" }}></div>
-      <div
+      <footer
         style={{
           height: "70px",
           width: "100%",
@@ -186,7 +185,7 @@ const App = () => {
         <p style={{ color: "white", alignSelf: "center", margin: "auto" }}>
           Made In North Pole &#47; Copyright &#174; 2021
         </p>
-      </div>
+      </footer>
     </>
   );
 };
