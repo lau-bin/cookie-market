@@ -137,7 +137,7 @@ const App = () => {
       </nav>
 
       {!signedIn && tab === 3 && (
-        <h4 style={{ margin: "148px auto", textAlign: "center" }}>
+        <h4 style={{ margin: "220px auto", textAlign: "center" }}>
           Connect your wallet
         </h4>
       )}
