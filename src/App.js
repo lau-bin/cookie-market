@@ -57,7 +57,7 @@ const App = () => {
         <div id="containerNavBar">
           <div id="navBar" className="ContainerFlex">
             <div>
-              <a id="logos">
+              <a id="logos" href="https://www.google.com">
                 <img className="logo" src={Logo} />
               </a>
 

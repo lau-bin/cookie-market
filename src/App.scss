@@ -302,7 +302,7 @@ nav {
 h4 {
   color: #915731;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  font-size: 12px !important;
+  font-size: 16px !important;
   font-weight: bolder;
   margin: 16px 0;
 }
@@ -314,7 +314,7 @@ input {
   background-color: #f8ede7 !important;
   box-sizing: border-box;
   font-weight: bold;
-  font-size: 12px !important;
+  font-size: 13px !important;
   border-radius: 8px;
   padding: 4px 8px;
   cursor: text;
@@ -329,14 +329,14 @@ button {
   background-color: #915731;
   box-sizing: border-box;
   font-weight: 900;
-  font-size: 10px !important;
+  font-size: 13px !important;
   padding: 4px 8px;
   cursor: pointer;
   outline: none !important;
 }
 
 input::placeholder {
-  font-size: 10px;
+  font-size: 12px;
   color: #915731;
 }
 
@@ -379,9 +379,9 @@ input::placeholder {
 
 .containerGrid {
   margin: auto;
-  width: 950px;
+  width: 1080px;
   display: grid;
-  grid-template-columns: repeat(5, 190px);
+  grid-template-columns: repeat(5, 216px);
 }
 
 .cookieToken {
@@ -389,8 +389,8 @@ input::placeholder {
   box-sizing: border-box;
   border-radius: 8px;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   display: block;
   margin: auto;
 }
@@ -505,8 +505,8 @@ input::placeholder {
   top: 2px;
 }
 
-.owner span {
-  color: #d18436;
+span {
+  font-size: 16px;
 }
 
 span.cost {
@@ -532,6 +532,10 @@ span.cost {
   animation-duration: 0.8s;
   animation-name: spinner-loading;
   z-index: -1;
+}
+
+#close-buyPopUp {
+  border: 0px !important;
 }
 
 button.bl {
