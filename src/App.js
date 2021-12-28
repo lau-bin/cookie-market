@@ -57,7 +57,7 @@ const App = () => {
         <div id="containerNavBar">
           <div id="navBar" className="ContainerFlex">
             <div>
-              <a id="logos" href="https://www.google.com">
+              <a id="logos" href="/">
                 <img className="logo" src={Logo} />
               </a>
 
@@ -65,7 +65,7 @@ const App = () => {
                 <a
                   className="links"
                   style={{ textDecoration: "none", color: "#915731" }}
-                  href="https://www.google.com"
+                  href="/minting"
                 >
                   Minting
                 </a>
@@ -76,7 +76,7 @@ const App = () => {
                 <a
                   className="links"
                   style={{ textDecoration: "none", color: "#915731" }}
-                  href="https://www.google.com"
+                  href="/faq"
                 >
                   FAQ
                 </a>
