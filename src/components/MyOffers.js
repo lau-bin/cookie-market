@@ -20,7 +20,7 @@ export const MyOffers = ({views,account,state}) => {
     
     return (
             <>
-			{ !state.tokensLoading.sales && !tokensWhitOffers.length && <h4 style={{margin:"100px auto",textAlign:"center"}}>You dont have any NFTs</h4>}
+			{ !state.tokensLoading.sales && !tokensWhitOffers.length && <h4 style={{margin:"100px auto",textAlign:"center"}}>You don't have any offers</h4>}
             
 			<div className="containerGrid mt-5">
                 {   tokensWhitOffers.map(token=>
