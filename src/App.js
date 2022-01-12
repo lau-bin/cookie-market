@@ -183,7 +183,7 @@ const App = () => {
         }}
       >
         <p style={{ color: "white", alignSelf: "center", margin: "auto" }}>
-          Made In North Pole &#47; Copyright &#174; 2021
+          Made In North Pole &#47; Copyright &#174; 2022
         </p>
       </footer>
     </>
