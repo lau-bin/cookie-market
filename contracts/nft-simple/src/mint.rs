@@ -11,7 +11,7 @@ impl Contract {
         receiver_id: Option<ValidAccountId>,
         token_type: Option<TokenType>,
     ) {
-
+        self.assert_owner();
         let mut final_token_id = format!("{}", self.token_metadata_by_id.len() + 1);
         if let Some(token_id) = token_id {
             final_token_id = token_id
